@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulado - Realidade Brasileira - CPNU 2025</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Marca d'água */
+    body::before {
+      content: "Digital Concursos";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      font-size: 120px;
+      color: rgba(200, 200, 200, 0.08);
+      pointer-events: none;
+      z-index: -1;
+      white-space: nowrap;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      border-bottom: 2px solid #ff6600;
+      margin-bottom: 20px;
+      background-color: #ff6600;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    header .logo-container {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      height: 60px;
+    }
+
+    header .logo-container img {
+      height: 100%;
+      width: auto;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6em;
+      color: white;
+    }
+
+    header h2 {
+      margin: 10px 0 0;
+      font-size: 1.3em;
+      color: white;
+      font-weight: 500;
+    }
+
+    header .logo {
+      font-size: 1.8em;
+      font-weight: bold;
+      color: white;
+      letter-spacing: 1px;
+      margin: 5px 0;
+    }
+
+    header .year {
+      font-size: 0.9em;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 5px;
+    }
+
+    .question {
+      margin-bottom: 25px;
+      padding: 20px;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      background-color: #fafafa;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .question:hover {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .question p {
+      margin: 0 0 10px;
+      line-height: 1.6;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .option {
+      display: block;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: white;
+    }
+
+    .option:hover {
+      background-color: #f0f8ff;
+      border-color: #007bff;
+      transform: translateX(5px);
+    }
+
+    .option.selected {
+      background-color: #e3f2fd;
+      border-color: #0056b3;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,123,255,0.2);
+    }
+
+    .option.correct {
+      background-color: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+
+    .option.wrong {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    #prevBtn {
+      background: linear-gradient(135deg, #6c757d, #5a6268);
+      color: white;
+    }
+
+    #prevBtn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #5a6268, #495057);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    #nextBtn {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+    }
+
+    #nextBtn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #0056b3, #004085);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    }
+
+    #checkBtn {
+      background: linear-gradient(135deg, #28a745, #218838);
+      color: white;
+    }
+
+    #checkBtn:hover {
+      background: linear-gradient(135deg, #218838, #1e7e34);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px 0;
+      font-size: 0.9em;
+      color: #666;
+      border-top: 1px solid #eee;
+    }
+
+    footer .slogan {
+      font-style: italic;
+      margin-bottom: 5px;
+    }
+
+    footer .copyright {
+      margin-bottom: 5px;
+    }
+
+    footer .page-info {
+      font-weight: bold;
+      color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-container">
+      
+      </div>
+       <h1>Simulado Online</h1>
+      <p>REALIDADE BRASILEIRA | Nível Médio - Banca: FGV</p>
+      <div class="logo">DIGITAL CONCURSOS</div>
+      <div class="year">Ano de Publicação: 2025</div>
+    </header>
+    <div class="intro">
+      Este simulado de <strong>Realidade Brasileira</strong>, elaborado no estilo da banca FGV, foi cuidadosamente desenvolvido para candidatos de nível Médio que buscam excelência em sua preparação. Com 40 questões originais e gabarito comentado, você treinará de forma objetiva e realista, simulando a experiência da prova oficial. O conteúdo é alinhado ao edital e às exigências da banca, garantindo qualidade, credibilidade e efetividade no seu estudo.
+    </div>
+    <div id="questions-container"></div>
+
+    <div class="navigation">
+      <button id="prevBtn">Anterior</button>
+      <button id="checkBtn">Ver Gabarito</button>
+      <button id="nextBtn">Próximo</button>
+    </div>
+
+    <footer>
+      <div class="slogan">“Seu sucesso é questão de preparo.”</div>
+      <div class="copyright">© 2025 Digital Concursos. Todos os direitos reservados.</div>
+      <div class="page-info">Página <span id="currentPage">1</span> de 4</div>
+    </footer>
+  </div>
+
+  <script>
+    // Dados das questões (40 questões)
+    const questions = [
+      {
+        "question": "A transferência da corte portuguesa para o Brasil em 1808 é um marco fundamental na formação do Brasil contemporâneo. Analisando suas consequências, é correto afirmar que a medida, embora motivada por uma crise europeia, resultou em um processo de 'interiorização da metrópole', que:",
+        "options": [
+          "Reforçou o pacto colonial, aumentando a dependência econômica do Brasil em relação a Portugal e dificultando o comércio com outras nações.",
+          "Acelerou a fragmentação territorial da colônia, inspirando movimentos separatistas que foram vitoriosos em províncias como Pernambuco e Bahia.",
+          "Lançou as bases para a unidade política do futuro Estado brasileiro, ao centralizar a administração no Rio de Janeiro e criar instituições que antes só existiam em Lisboa.",
+          "Promoveu a imediata abolição da escravatura como uma concessão à Inglaterra, principal aliada de Portugal na luta contra Napoleão.",
+          "Resultou no isolamento completo do Brasil em relação ao restante da América, que via com desconfiança a presença de uma monarquia europeia no continente."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A Lei Eusébio de Queirós, promulgada em 1850, proibiu o tráfico de escravos para o Brasil. Sobre o contexto e os desdobramentos dessa lei, analise as afirmativas a seguir: I. A lei foi uma resposta direta e exclusiva à pressão humanitária interna, liderada por abolicionistas que já possuíam ampla força política no parlamento imperial. II. A proibição do tráfico intensificou o comércio interno de escravos, deslocando a mão de obra das lavouras decadentes do Nordeste para as fazendas de café em expansão no Sudeste. III. Com o fim do tráfico, os capitais que antes eram investidos na compra de africanos foram direcionados para outras atividades econômicas, impulsionando a modernização em setores como bancos e ferrovias. Está correto o que se afirma em:",
+        "options": [
+          "I, apenas.",
+          "II, apenas.",
+          "I e III, apenas.",
+          "II e III, apenas.",
+          "I, II e III."
+        ],
+        "answer": 3
+      },
+      {
+        "question": "A Lei Áurea extinguiu a escravidão, mas não foi acompanhada por nenhuma política de integração do ex-escravizado à sociedade. Sem terra, sem educação e sem amparo, a liberdade formal não se traduziu em cidadania plena, empurrando essa população para as margens da nova ordem republicana. Considerando o trecho e o processo histórico subsequente, é correto afirmar que a abolição:",
+        "options": [
+          "Foi um processo planejado que garantiu aos libertos a posse de pequenas propriedades rurais, evitando a formação de favelas nas cidades.",
+          "Resolveu a questão racial no Brasil, eliminando as bases do preconceito e da discriminação que existiam no período escravocrata.",
+          "Deu origem a um grande projeto de educação pública voltado para os ex-escravos, financiado pelos antigos senhores como forma de indenização.",
+          "Representou uma 'abolição inconclusa', pois, ao não criar mecanismos de inclusão, perpetuou a exclusão social e econômica da população negra.",
+          "Incentivou a vinda de imigrantes africanos para competir em igualdade de condições com os trabalhadores europeus que chegavam ao país."
+        ],
+        "answer": 3
+      },
+      {
+        "question": "A Constituição de 1988 é considerada um marco na luta antirracista no Brasil. Um de seus dispositivos mais importantes nesse sentido foi:",
+        "options": [
+          "A criação de um sistema de cotas raciais para todas as universidades públicas do país, estabelecido já no texto original da Constituição.",
+          "A criminalização do racismo como crime inafiançável e imprescritível, elevando o combate à discriminação a um dever do Estado.",
+          "A proibição da imigração de grupos étnicos considerados 'indesejáveis', revertendo políticas do início do século XX.",
+          "A oficialização do candomblé e da umbanda como religiões oficiais do Estado brasileiro, em reconhecimento à sua matriz africana.",
+          "A determinação de que 50% dos cargos no serviço público federal fossem obrigatoriamente preenchidos por pessoas negras."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "O Movimento Negro Unificado (MNU), surgido em 1978, representou uma nova fase na luta antirracista no Brasil. Uma de suas principais bandeiras, que o diferenciava de movimentos anteriores, era:",
+        "options": [
+          "A defesa da monarquia como o sistema de governo mais adequado para proteger a população negra.",
+          "A negação da existência do racismo no Brasil, argumentando que a miscigenação havia criado uma 'democracia racial'.",
+          "A denúncia do mito da democracia racial e a afirmação da identidade negra, combatendo a discriminação de forma mais direta e politizada.",
+          "A luta exclusiva por direitos religiosos, focando apenas na liberação dos cultos de matriz africana.",
+          "A proposta de separação do território brasileiro para a criação de um Estado independente para a população negra."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A Proclamação da República, em 1889, não representou uma ruptura completa com o passado imperial, especialmente no que tange à estrutura social e econômica do país. Nesse contexto, é correto afirmar que:",
+        "options": [
+          "A República promoveu uma reforma agrária imediata, distribuindo terras aos ex-escravos e camponeses sem-terra.",
+          "A elite agrária, que detinha o poder durante o Império, perdeu completamente sua influência política e econômica com a ascensão republicana.",
+          "O novo regime manteve a concentração de terras e a exclusão social de grande parte da população, especialmente a negra e a indígena.",
+          "A industrialização do país foi acelerada, transformando o Brasil em uma potência manufatureira já nas primeiras décadas republicanas.",
+          "A cidadania plena foi estendida a todos os brasileiros, independentemente de raça, gênero ou condição social, com a instauração da República."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A política de branqueamento, presente no Brasil no final do século XIX e início do XX, visava, entre outros objetivos, a 'melhoria' da raça através do incentivo à imigração europeia. Essa política estava fundamentada em teorias:",
+        "options": [
+          "Criacionistas, que defendiam a superioridade dos povos europeus com base em preceitos religiosos.",
+          "Do racismo científico, como a eugenia, que hierarquizavam as raças e consideravam a população negra e mestiça como inferiores.",
+          "Culturalistas, que promoviam a fusão de diferentes culturas como forma de enriquecimento da identidade nacional.",
+          "Socialistas, que viam na imigração uma forma de fortalecer a classe trabalhadora e combater a elite agrária.",
+          "Anarquistas, que pregavam o fim das fronteiras e a livre circulação de pessoas como um direito universal."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Revolta da Chibata (1910), liderada por João Cândido, foi um motim de marinheiros, em sua maioria negros, contra os castigos corporais na Marinha brasileira. Este evento é emblemático da:",
+        "options": [
+          "Luta dos militares por melhores salários, sem qualquer conotação racial.",
+          "Persistência de práticas e mentalidades escravocratas na República, mesmo após a abolição.",
+          "Influência do comunismo internacional nas Forças Armadas brasileiras.",
+          "Tentativa de golpe de Estado para restaurar a monarquia no Brasil.",
+          "Insatisfação dos marinheiros com a política externa brasileira de alinhamento com os Estados Unidos."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Lei nº 10.639/2003, que alterou a Lei de Diretrizes e Bases da Educação Nacional, tornou obrigatório o ensino de História e Cultura Africana e Afro-brasileira nas escolas. Essa lei representa uma importante conquista do movimento negro porque:",
+        "options": [
+          "Garante a criação de escolas exclusivas para a população negra, em um sistema de segregação racial.",
+          "Valoriza a contribuição dos povos africanos na formação do Brasil, combatendo o eurocentrismo e o racismo no ambiente escolar.",
+          "Substitui o ensino da história do Brasil pela história da África, como forma de reparação histórica.",
+          "Limita o estudo da cultura afro-brasileira às manifestações religiosas, como o candomblé e a umbanda.",
+          "Isenta os alunos negros de estudarem a história da Europa, por considerá-la irrelevante para sua formação."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "Sobre os desafios atuais da população negra no Brasil, mesmo com as conquistas legais das últimas décadas, é correto afirmar que:",
+        "options": [
+          "O racismo estrutural foi completamente superado, e as desigualdades existentes são apenas de natureza econômica.",
+          "A violência policial atinge de forma igualitária todas as raças, não havendo uma sobrerrepresentação de vítimas negras.",
+          "A representatividade política de pessoas negras em cargos eletivos já é proporcional à sua presença na população total.",
+          "Persistem desigualdades no mercado de trabalho, com a população negra concentrada em postos de menor remuneração e prestígio.",
+          "O acesso ao ensino superior foi universalizado, e não há mais desafios relacionados à permanência de estudantes negros nas universidades."
+        ],
+        "answer": 3
+      },
+      // Bloco 2
+      {
+        "question": "A Independência do Brasil, em 1822, embora celebrada como um marco de libertação, manteve a estrutura social e econômica vigente, especialmente no que se refere à escravidão. Nesse sentido, pode-se afirmar que:",
+        "options": [
+          "A independência foi um movimento popular que contou com a ampla participação de escravos e libertos, que exigiam o fim da escravidão.",
+          "A elite agrária, temerosa de uma revolução social, optou pela independência para preservar seus privilégios e a ordem escravocrata.",
+          "Portugal impôs a abolição da escravatura como condição para reconhecer a independência do Brasil.",
+          "A Inglaterra, principal parceira comercial do Brasil, exigiu o fim imediato da escravidão em troca de apoio militar.",
+          "A independência resultou na imediata distribuição de terras aos escravos, que se tornaram pequenos proprietários rurais."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "O período regencial (1831-1840) foi marcado por grande instabilidade política e social no Brasil. Dentre os movimentos que eclodiram nesse período, a Revolta dos Malês (1835), na Bahia, destaca-se por:",
+        "options": [
+          "Ser um movimento de caráter exclusivamente religioso, sem qualquer reivindicação política ou social.",
+          "Ser liderada por escravos e libertos muçulmanos, que lutavam por liberdade e pelo fim da escravidão, além de criticar a religião católica.",
+          "Ter como principal objetivo a restauração da monarquia portuguesa no Brasil, com o apoio de setores conservadores da elite.",
+          "Ser um movimento de caráter separatista, que buscava a independência da Bahia em relação ao restante do Império.",
+          "Ter sido um movimento pacífico, que utilizou apenas a via diplomática para alcançar seus objetivos."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Lei do Ventre Livre (1871) e a Lei dos Sexagenários (1885) são consideradas medidas abolicionistas graduais. Sobre o impacto dessas leis, é correto afirmar que:",
+        "options": [
+          "Ambas as leis garantiram a liberdade imediata e incondicional a todos os escravos, independentemente da idade ou condição.",
+          "A Lei do Ventre Livre libertou os filhos de escravas nascidos a partir de sua promulgação, mas os manteve sob a tutela dos senhores até a maioridade.",
+          "A Lei dos Sexagenários libertou todos os escravos com mais de 60 anos, mas exigia que eles prestassem serviços aos seus antigos senhores por mais três anos.",
+          "As leis foram amplamente aceitas pelos senhores de escravos, que as viam como uma forma justa de transição para o trabalho livre.",
+          "As leis aceleraram o processo abolicionista, levando à Lei Áurea em menos de cinco anos após a Lei dos Sexagenários."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Proclamação da República no Brasil, em 1889, foi um movimento liderado principalmente por militares e cafeicultores. As motivações para essa mudança de regime incluíam:",
+        "options": [
+          "A defesa da abolição imediata da escravatura e a implementação de uma reforma agrária radical.",
+          "A insatisfação com a centralização do poder imperial e o desejo de maior autonomia para as províncias.",
+          "A busca por uma aliança com os países socialistas da Europa para modernizar a economia brasileira.",
+          "A defesa da monarquia parlamentarista como forma de governo, em oposição ao regime imperial.",
+          "A promoção da igualdade social e a inclusão de todas as camadas da população no processo político."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "O conceito de 'democracia racial' no Brasil, embora amplamente difundido por parte da sociedade, tem sido criticado pelo movimento negro por:",
+        "options": [
+          "Negar a miscigenação como um traço cultural importante da identidade brasileira.",
+          "Ignorar a existência do racismo e das desigualdades raciais, mascarando a discriminação e a exclusão social.",
+          "Promover a segregação racial e a criação de guetos para a população negra.",
+          "Defender a superioridade de uma raça sobre as outras, em contradição com os princípios democráticos.",
+          "Incentivar a polarização entre brancos e negros, dificultando o diálogo e a convivência pacífica."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Lei nº 7.716/1989, conhecida como Lei Caó, foi um marco na legislação antirracista brasileira. Sua principal contribuição foi:",
+        "options": [
+          "Instituir o sistema de cotas raciais para ingresso em universidades públicas e concursos.",
+          "Criminalizar o racismo, tornando-o inafiançável e imprescritível, conforme previsto na Constituição de 1988.",
+          "Criar o Estatuto da Igualdade Racial, que estabelece direitos e deveres para a promoção da igualdade racial.",
+          "Proibir a veiculação de imagens e textos que incitem o preconceito de raça, cor, etnia, religião ou procedência nacional.",
+          "Determinar a obrigatoriedade do ensino de história e cultura afro-brasileira e indígena nas escolas."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A luta por direitos e reconhecimento das comunidades quilombolas no Brasil é um exemplo da persistência da luta antirracista. A Constituição Federal de 1988 garantiu a essas comunidades:",
+        "options": [
+          "O direito à indenização financeira por todo o período de escravidão de seus antepassados.",
+          "A posse definitiva das terras que tradicionalmente ocupam, com a emissão dos títulos de propriedade.",
+          "A criação de um sistema de cotas exclusivo para quilombolas em todos os níveis de ensino.",
+          "A isenção total de impostos e taxas federais, estaduais e municipais.",
+          "O direito de criar suas próprias leis e sistemas de justiça, independentemente da legislação brasileira."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "O conceito de racismo estrutural, amplamente debatido na atualidade, refere-se à:",
+        "options": [
+          "Ações isoladas de indivíduos que manifestam preconceito racial em seu cotidiano.",
+          "Discriminação racial explícita e verbalizada, facilmente identificável e punível por lei.",
+          "Forma como o racismo está enraizado nas instituições, normas e práticas sociais, resultando em desvantagens para grupos raciais específicos.",
+          "Ideia de que o racismo é um problema exclusivo de países com histórico de segregação racial, como os Estados Unidos.",
+          "Crença de que a miscigenação é a solução para o racismo, pois dilui as diferenças raciais ao longo do tempo."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A Lei de Cotas (Lei nº 12.711/2012) para ingresso nas universidades federais e instituições federais de ensino técnico de nível médio, embora não seja exclusiva para negros, tem um impacto significativo na promoção da igualdade racial. Esse impacto se dá porque:",
+        "options": [
+          "Garante que apenas estudantes negros sejam beneficiados, excluindo outras minorias sociais.",
+          "Prioriza a meritocracia individual, sem considerar o histórico de desigualdades sociais e raciais.",
+          "Reserva vagas para estudantes que cursaram integralmente o ensino médio em escolas públicas, incluindo critérios de renda e raça/cor.",
+          "Elimina a necessidade de políticas afirmativas, uma vez que o acesso ao ensino superior se torna igualitário para todos.",
+          "Foca exclusivamente na reparação histórica, sem considerar a qualidade do ensino oferecido pelas instituições."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A violência policial contra a população negra no Brasil é um dos desafios atuais mais urgentes no combate ao racismo. Dados e estudos apontam que:",
+        "options": [
+          "A letalidade policial é distribuída de forma homogênea entre todos os grupos raciais no país.",
+          "Pessoas negras são desproporcionalmente mais vitimadas pela violência policial, configurando um problema de racismo institucional.",
+          "A maioria dos casos de violência policial contra negros ocorre em áreas rurais, sem relação com o contexto urbano.",
+          "A violência policial é um fenômeno recente, sem raízes históricas no período pós-abolição.",
+          "A questão da violência policial é um problema exclusivamente de segurança pública, sem relação com questões raciais."
+        ],
+        "answer": 1
+      },
+      // Bloco 3
+      {
+        "question": "A formação do Estado brasileiro, após a Independência, foi marcada pela manutenção de uma estrutura agrária latifundiária e escravista. Essa característica influenciou diretamente a:",
+        "options": [
+          "Rápida industrialização do país, impulsionada pela mão de obra livre e abundante.",
+          "Consolidação de uma sociedade igualitária, com ampla distribuição de renda e terras.",
+          "Centralização do poder nas mãos de uma elite rural, que controlava a política e a economia.",
+          "Implementação de políticas públicas voltadas para a inclusão social e a educação universal.",
+          "Fragmentação territorial do país, com a formação de diversas repúblicas independentes."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "O Quilombo dos Palmares, liderado por Zumbi, representa um dos maiores símbolos de resistência à escravidão no Brasil. Sua importância histórica reside no fato de:",
+        "options": [
+          "Ter sido o único quilombo a existir no período colonial, demonstrando a passividade da população escravizada.",
+          "Ter se tornado um centro de articulação política e militar, desafiando o poder colonial e inspirando outras fugas e revoltas.",
+          "Ter sido um movimento de caráter exclusivamente religioso, sem qualquer objetivo de libertação social.",
+          "Ter sido um quilombo efêmero, que durou apenas alguns meses antes de ser completamente destruído.",
+          "Ter sido um movimento de resistência pacífica, que buscava a negociação com os senhores de engenho."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Lei do Sexagenário (1885), embora apresentada como um avanço abolicionista, foi criticada por diversos setores da sociedade da época. A principal crítica a essa lei era que:",
+        "options": [
+          "Ela concedia liberdade imediata a todos os escravos, independentemente da idade, o que gerou grande descontentamento entre os proprietários.",
+          "Ela exigia que os escravos com mais de 60 anos, após a alforria, trabalhassem por mais três anos para seus antigos senhores, o que a tornava uma liberdade condicionada e, para muitos, uma farsa.",
+          "Ela não previa qualquer tipo de indenização aos senhores de escravos, o que gerou forte oposição no parlamento.",
+          "Ela se aplicava apenas aos escravos nascidos no Brasil, excluindo os africanos que ainda viviam em cativeiro.",
+          "Ela promovia a desagregação familiar, pois libertava apenas os idosos, deixando seus filhos e netos na escravidão."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Primeira República (1889-1930), também conhecida como República Oligárquica, foi caracterizada pela hegemonia das elites agrárias, especialmente cafeeiras. Nesse período, a participação política era restrita, e o voto era marcado por práticas como:",
+        "options": [
+          "O voto universal e secreto, que garantia a livre escolha dos eleitores.",
+          "O voto censitário, que excluía a maioria da população, e o voto de cabresto, que manipulava o eleitorado.",
+          "O voto feminino, que empoderava as mulheres e as incluía no processo político.",
+          "O voto aberto, que permitia a fiscalização popular e a transparência eleitoral.",
+          "O voto obrigatório para todos os cidadãos, independentemente de sua condição social."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "O conceito de 'lugar de fala', amplamente utilizado nos debates contemporâneos sobre racismo e outras formas de opressão, refere-se à:",
+        "options": [
+          "Ideia de que qualquer pessoa pode falar sobre qualquer assunto, desde que tenha conhecimento técnico.",
+          "Necessidade de que apenas especialistas acadêmicos se pronunciem sobre questões sociais complexas.",
+          "Perspectiva de que a experiência vivida por indivíduos pertencentes a grupos oprimidos confere a eles uma autoridade e legitimidade específicas para abordar suas realidades.",
+          "Proibição de que pessoas brancas ou de grupos dominantes se manifestem sobre questões raciais.",
+          "Crença de que a fala é um ato puramente individual, sem qualquer relação com a posição social do falante."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A criação da Secretaria de Políticas de Promoção da Igualdade Racial (SEPPIR), em 2003, e a posterior elevação de seu status para Ministério, representaram um avanço institucional na luta antirracista no Brasil. Entre as atribuições desse órgão, destaca-se:",
+        "options": [
+          "A fiscalização e punição de crimes de racismo, substituindo a atuação da Polícia Federal.",
+          "A formulação, coordenação e execução de políticas públicas voltadas para a promoção da igualdade racial e a superação do racismo.",
+          "A gestão de programas de intercâmbio cultural com países africanos, sem foco em políticas internas.",
+          "A organização de eventos esportivos e culturais para a população negra, sem vínculo com políticas de inclusão social.",
+          "A criação de um banco de dados genéticos para identificar a ancestralidade de todos os brasileiros."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Lei nº 12.288/2010, conhecida como Estatuto da Igualdade Racial, tem como objetivo garantir à população negra a efetivação da igualdade de oportunidades, a defesa dos direitos étnicos individuais, coletivos e difusos e o combate à discriminação e às demais formas de intolerância étnica. Um dos princípios fundamentais do Estatuto é:",
+        "options": [
+          "A meritocracia como único critério para acesso a bens e serviços, desconsiderando o histórico de desigualdades.",
+          "A promoção de ações afirmativas como medidas especiais e temporárias para corrigir distorções e promover a igualdade.",
+          "A segregação racial como forma de preservar a identidade cultural de diferentes grupos étnicos.",
+          "A criminalização de todas as manifestações culturais de matriz africana, por considerá-las incompatíveis com a laicidade do Estado.",
+          "A exclusão de pessoas negras de cargos de liderança, para evitar conflitos raciais no ambiente de trabalho."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A sub-representação de pessoas negras em cargos de liderança e em posições de destaque no mercado de trabalho brasileiro é um reflexo do racismo estrutural. Para combater essa realidade, têm sido propostas e implementadas medidas como:",
+        "options": [
+          "A proibição de empresas contratarem pessoas negras para cargos de gerência, a fim de evitar a 'discriminação reversa'.",
+          "A adoção de programas de trainee e estágio exclusivos para pessoas negras, além de metas de diversidade nas empresas.",
+          "A exigência de que todas as empresas brasileiras sejam geridas exclusivamente por pessoas negras.",
+          "A criação de um imposto adicional para empresas que contratam pessoas negras, como forma de compensação.",
+          "A desconsideração da raça nos processos seletivos, com o argumento de que a 'cegueira para a cor' é a melhor forma de combater o racismo."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A história dos negros no Brasil é marcada por diversas formas de resistência à escravidão, que vão além das fugas e da formação de quilombos. Dentre essas formas de resistência, pode-se citar:",
+        "options": [
+          "A aceitação passiva da condição de escravo, sem qualquer tipo de reação ou contestação.",
+          "A prática do suicídio coletivo como forma de protesto contra a escravidão.",
+          "A preservação de elementos culturais africanos, como a religião, a música e a culinária, que serviam como forma de manutenção da identidade e resistência cultural.",
+          "A colaboração com os senhores de engenho para a captura de outros escravos fugidos.",
+          "A organização de partidos políticos e sindicatos para lutar por direitos civis no período colonial."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A Lei do Ventre Livre (1871) e a Lei dos Sexagenários (1885) são frequentemente analisadas como tentativas de modernizar a imagem do Brasil no cenário internacional, em um contexto de crescente pressão abolicionista. No entanto, essas leis também podem ser interpretadas como:",
+        "options": [
+          "Medidas genuinamente humanitárias que visavam o fim imediato da escravidão no país.",
+          "Estratégias para prolongar a escravidão, ao oferecer uma liberdade gradual e condicionada que não alterava significativamente a estrutura social.",
+          "Concessões aos movimentos abolicionistas radicais, que exigiam a libertação de todos os escravos sem qualquer tipo de compensação.",
+          "Políticas de incentivo à imigração europeia, que visavam substituir a mão de obra escrava por trabalhadores livres.",
+          "Tentativas de evitar uma guerra civil entre abolicionistas e escravocratas, buscando um consenso entre as partes."
+        ],
+        "answer": 1
+      },
+      // Bloco 4
+      {
+        "question": "A Revolta da Vacina (1904), no Rio de Janeiro, embora não diretamente ligada à questão racial, revelou as tensões sociais e a exclusão de grande parte da população, incluindo negros e mestiços, no início da República. Esse evento demonstra que:",
+        "options": [
+          "A população aceitava passivamente as imposições do governo, sem qualquer tipo de resistência.",
+          "As políticas de modernização urbana e sanitária da época eram implementadas sem considerar as condições de vida e a opinião da população mais pobre.",
+          "A vacinação obrigatória era uma medida amplamente apoiada por todas as camadas sociais, sem qualquer tipo de oposição.",
+          "O governo republicano priorizava a saúde pública e o bem-estar da população, independentemente de sua condição social.",
+          "A revolta foi um movimento isolado, sem qualquer relação com as desigualdades sociais e raciais da época."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Lei nº 12.990/2014, que reserva 20% das vagas em concursos públicos federais para candidatos negros, é uma das ações afirmativas mais importantes no Brasil. Essa lei busca:",
+        "options": [
+          "Criar um sistema de cotas para todas as esferas do serviço público, incluindo estados e municípios.",
+          "Garantir a representatividade de pessoas negras no serviço público, combatendo a sub-representação histórica e o racismo institucional.",
+          "Promover a segregação racial no serviço público, criando cargos exclusivos para pessoas negras.",
+          "Indenizar financeiramente as pessoas negras pelos danos causados pela escravidão.",
+          "Substituir a meritocracia por critérios raciais na seleção de servidores públicos."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A questão da terra no Brasil, desde o período colonial até a República, tem sido um fator central na perpetuação das desigualdades sociais e raciais. Nesse contexto, a luta por reforma agrária e o reconhecimento dos direitos territoriais de comunidades tradicionais, como os quilombolas, são fundamentais para:",
+        "options": [
+          "Manter a concentração de terras nas mãos de poucos proprietários, garantindo a estabilidade econômica do país.",
+          "Promover a justiça social e racial, distribuindo terras e garantindo o acesso a recursos naturais para populações historicamente marginalizadas.",
+          "Incentivar a monocultura e a produção de commodities para exportação, sem considerar a sustentabilidade ambiental.",
+          "Desestimular a produção agrícola e pecuária, levando à escassez de alimentos no país.",
+          "Aumentar a dependência do Brasil em relação a produtos importados, prejudicando a economia nacional."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A Lei nº 11.645/2008, que alterou a Lei de Diretrizes e Bases da Educação Nacional, tornou obrigatório o ensino de História e Cultura Afro-Brasileira e Indígena nas escolas. Essa alteração é crucial para:",
+        "options": [
+          "Excluir o ensino da história europeia e ocidental do currículo escolar brasileiro.",
+          "Promover a valorização da diversidade cultural e o reconhecimento da contribuição dos povos africanos e indígenas na formação da identidade nacional.",
+          "Limitar o estudo da cultura afro-brasileira e indígena a datas comemorativas específicas, sem aprofundamento.",
+          "Incentivar a segregação racial nas escolas, com a criação de turmas separadas para alunos de diferentes etnias.",
+          "Reduzir a carga horária de outras disciplinas consideradas mais importantes para o desenvolvimento dos alunos."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "O conceito de interseccionalidade, fundamental para a compreensão das desigualdades sociais e raciais, refere-se à:",
+        "options": [
+          "Análise isolada de cada forma de opressão (racismo, machismo, classismo), sem considerar suas interconexões.",
+          "Ideia de que todas as formas de opressão são idênticas e afetam as pessoas da mesma maneira.",
+          "Compreensão de que diferentes categorias sociais (raça, gênero, classe, sexualidade) se cruzam e se interligam, produzindo experiências únicas de opressão e privilégio.",
+          "Proposta de que a luta contra o racismo deve ser priorizada em detrimento de outras lutas sociais.",
+          "Crença de que a opressão é um fenômeno puramente individual, sem raízes em estruturas sociais."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A luta antirracista no Brasil tem se manifestado de diversas formas, desde a resistência escrava até os movimentos sociais contemporâneos. Uma das estratégias mais eficazes tem sido a:",
+        "options": [
+          "Adoção de uma postura de passividade e aceitação das desigualdades, esperando que o problema se resolva naturalmente.",
+          "Organização de movimentos sociais, coletivos e ativistas que denunciam o racismo, exigem direitos e promovem a conscientização.",
+          "Busca por soluções individuais, sem a necessidade de ações coletivas ou políticas públicas.",
+          "Negação da existência do racismo, argumentando que o Brasil é uma democracia racial plena.",
+          "Dependência exclusiva de ações governamentais, sem a participação da sociedade civil."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A abolição da escravatura no Brasil, em 1888, foi um processo complexo, influenciado por fatores internos e externos. Dentre os fatores externos, destaca-se a:",
+        "options": [
+          "Pressão da Igreja Católica, que condenava a escravidão por motivos morais e religiosos.",
+          "Influência da Revolução Francesa, que defendia a liberdade e a igualdade para todos os seres humanos.",
+          "Pressão da Inglaterra, que, em sua busca por novos mercados e mão de obra livre, atuava pelo fim do tráfico e da escravidão.",
+          "Adoção do socialismo como sistema político em diversos países europeus, que impulsionou o fim da escravidão.",
+          "Criação da Organização das Nações Unidas (ONU), que estabeleceu a escravidão como crime contra a humanidade."
+        ],
+        "answer": 2
+      },
+      {
+        "question": "A Lei do Inquilinato (Lei nº 8.245/1991) e o Código Civil (Lei nº 10.406/2002) são exemplos de legislações que, embora não diretamente relacionadas à questão racial, podem ter impacto na vida da população negra. Isso ocorre porque:",
+        "options": [
+          "Elas promovem a segregação racial em moradias e contratos, dificultando o acesso de pessoas negras a esses direitos.",
+          "A discriminação racial no acesso à moradia e a contratos é uma realidade, e essas leis, embora neutras em sua formulação, podem ser aplicadas de forma a perpetuar desigualdades.",
+          "Elas garantem a prioridade de pessoas negras no aluguel de imóveis e na celebração de contratos, como forma de reparação histórica.",
+          "Elas proíbem qualquer tipo de discriminação em relações contratuais, tornando o racismo ilegal em todas as esferas.",
+          "Elas não possuem qualquer relevância para a discussão sobre racismo, pois tratam apenas de questões civis e comerciais."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A luta antirracista no Brasil contemporâneo tem se beneficiado do uso das redes sociais e da internet para a mobilização e conscientização. Essa nova forma de ativismo permite:",
+        "options": [
+          "Apenas a disseminação de informações falsas e a polarização de debates, sem impacto real na sociedade.",
+          "A ampliação do alcance das denúncias de racismo, a organização de campanhas e a articulação de movimentos, superando barreiras geográficas.",
+          "A substituição completa das formas tradicionais de ativismo, como manifestações de rua e debates presenciais.",
+          "O isolamento dos ativistas em bolhas virtuais, sem conexão com a realidade social.",
+          "A criação de um ambiente de impunidade para crimes de racismo, devido à dificuldade de rastreamento na internet."
+        ],
+        "answer": 1
+      },
+      {
+        "question": "A formação do Brasil contemporâneo é um processo contínuo, marcado por avanços e desafios na construção de uma sociedade mais justa e igualitária. Nesse contexto, a compreensão da história dos negros no Brasil e da luta antirracista é fundamental para:",
+        "options": [
+          "Ignorar o passado e focar apenas no futuro, sem se preocupar com as raízes históricas das desigualdades.",
+          "Perpetuar preconceitos e estereótipos, reforçando a ideia de que o racismo é um problema insolúvel.",
+          "Promover a reflexão crítica sobre as estruturas sociais, identificar as causas das desigualdades e propor soluções para a construção de um futuro mais equitativo.",
+          "Atribuir a culpa pelas desigualdades apenas a indivíduos, sem considerar o papel das instituições e da história.",
+          "Desvalorizar a cultura brasileira, ao focar em aspectos negativos da formação do país."
+        ],
+        "answer": 2
+      }
+    ];
+
+    const questionsPerPage = 10;
+    let currentPage = 0;
+
+    const container = document.getElementById("questions-container");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const checkBtn = document.getElementById("checkBtn");
+    const currentPageSpan = document.getElementById("currentPage");
+
+    function renderQuestions(page) {
+      container.innerHTML = "";
+      const start = page * questionsPerPage;
+      const end = start + questionsPerPage;
+      const pageQuestions = questions.slice(start, end);
+
+      pageQuestions.forEach((q, index) => {
+        const questionEl = document.createElement("div");
+        questionEl.className = "question";
+        questionEl.innerHTML = `
+          <p><strong>${start + index + 1}. ${q.question}</strong></p>
+          <div class="options" id="options-${index}">
+            ${q.options.map((opt, i) =>
+              `<div class="option" data-index="${i}">${String.fromCharCode(65 + i)}) ${opt}</div>`
+            ).join("")}
+          </div>
+          <div class="feedback" id="feedback-${index}"></div>
+        `;
+        container.appendChild(questionEl);
+      });
+
+      // Restaura eventos de clique
+      addOptionListeners();
+      updateButtons();
+    }
+
+    function addOptionListeners() {
+      document.querySelectorAll(".option").forEach(option => {
+        option.onclick = function () {
+          const options = this.parentElement.children;
+          Array.from(options).forEach(opt => opt.classList.remove("selected"));
+          this.classList.add("selected");
+        };
+      });
+    }
+
+    function updateButtons() {
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = currentPage === Math.ceil(questions.length / questionsPerPage) - 1;
+      currentPageSpan.textContent = currentPage + 1;
+    }
+
+    checkBtn.addEventListener("click", function () {
+      const start = currentPage * questionsPerPage;
+      const pageQuestions = questions.slice(start, start + questionsPerPage);
+
+      pageQuestions.forEach((q, index) => {
+        const options = document.querySelectorAll(`#options-${index} .option`);
+        const feedback = document.getElementById(`feedback-${index}`);
+        let selected = -1;
+
+        options.forEach((opt, i) => {
+          if (opt.classList.contains("selected")) selected = i;
+          opt.classList.remove("correct", "wrong");
+        });
+
+        if (selected === -1) {
+          feedback.textContent = "Você não selecionou nenhuma alternativa.";
+          feedback.style.color = "orange";
+        } else {
+          if (selected === q.answer) {
+            options[selected].classList.add("correct");
+            feedback.textContent = "✔️ Correto!";
+            feedback.style.color = "green";
+          } else {
+            options[selected].classList.add("wrong");
+            options[q.answer].classList.add("correct");
+            feedback.textContent = `❌ Errado. A correta é: ${String.fromCharCode(65 + q.answer)}.`;
+            feedback.style.color = "red";
+          }
+        }
+      });
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage--;
+        renderQuestions(currentPage);
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentPage < Math.ceil(questions.length / questionsPerPage) - 1) {
+        currentPage++;
+        renderQuestions(currentPage);
+      }
+    });
+
+    // Inicializa
+    renderQuestions(currentPage);
+  </script>
+</body>
+</html>
